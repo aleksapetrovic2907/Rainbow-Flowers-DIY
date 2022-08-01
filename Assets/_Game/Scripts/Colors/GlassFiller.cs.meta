@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 3cc061197cb475c47b80b27decd4cf6d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - GlassFillData: {fileID: 11400000, guid: d03f2d26703403e44a16c1b4548d1b4a, type: 2}
+  executionOrder: 200
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
