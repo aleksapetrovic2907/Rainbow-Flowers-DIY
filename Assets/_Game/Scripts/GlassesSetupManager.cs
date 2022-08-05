@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Aezakmi.Tweens;
+using Aezakmi.Colors;
 
 namespace Aezakmi
 {
@@ -25,7 +26,8 @@ namespace Aezakmi
 
             if (++_totalGlassesSetup == Glasses.Count)
             {
-                // finished
+                EventManager.TriggerEvent(GameEvents.GlassesPutOnCoasters, new Dictionary<string, object> { });
+                gameObject.SetActive(false);
                 return;
             }
 
@@ -41,6 +43,7 @@ namespace Aezakmi
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask))
                 {
                     hit.transform.gameObject.GetComponent<MoveGlassToCoaster>().MoveGlass(Coasters[_totalGlassesSetup].transform.position + Vector3.up * GLASS_OFFSET_Y);
+                    GameManager.Instance.FillColorsByCoaster.Add(hit.transform.gameObject.GetComponent<GlassFillReferencer>().GlassFiller._fillColor);
                     GlassPutOnCoaster();
                 }
             }

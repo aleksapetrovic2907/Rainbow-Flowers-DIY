@@ -10,7 +10,7 @@ namespace Aezakmi.Colors
         [SerializeField] private GlassFillData GlassFillData;
 
         private float[] _colorFillAmount;
-        private Color _fillColor;
+        public Color _fillColor { get; private set; }
         private Color _topColor;
         private Color _fresnelColor;
 
@@ -29,6 +29,9 @@ namespace Aezakmi.Colors
 
         private void Update()
         {
+            if (GameManager.Instance.CurrentStep != Steps.ColorMixing)
+                return;
+
             if (InputManager.Instance.IsTouching && !InputManager.Instance.IsClickingUI && !IsFull && ColorMixingManager.Instance.CanPour)
                 Invoke("Fill", GlassFillData.FillDelay);
         }

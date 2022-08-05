@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aea83c6893e1f9f4c952e554e4da92f1, type: 3}
   m_Name: GlassFillData
   m_EditorClassIdentifier: 
-  FillSpeed: 0.5
+  FillSpeed: 3
   FillDelay: 0
   FillSaturation: 0.8
   FillLightness: 0.65

@@ -14,10 +14,14 @@ namespace Aezakmi
         [SerializeField] private Vector3 RotationWhenPouring;
         [SerializeField] private float RotationSpeed;
 
-        [SerializeField] private Renderer JugRenderer;
         [SerializeField] private ParticleSystem ParticleSystem;
-        private ParticleSystem.MainModule _psMain;
 
+        [SerializeField] private Renderer JugRenderer;
+        [SerializeField] private float FillWhenStill;
+        [SerializeField] private float FillWhenPouring;
+        [SerializeField] private float FillChangeSpeed;
+
+        private ParticleSystem.MainModule _psMain;
         private Vector3 _targetRotation;
         private Scale _scaleTween;
         private Color _fillColor, _topColor, _fresnelColor;
@@ -29,21 +33,52 @@ namespace Aezakmi
             SetColor();
         }
 
-        private void OnEnable() => EventManager.StartListening(GameEvents.ColorChanged, ChangeColor);
-        private void OnDisable() => EventManager.StopListening(GameEvents.ColorChanged, ChangeColor);
+        private void OnEnable()
+        {
+            EventManager.StartListening(GameEvents.ColorChanged, ChangeColor);
+            EventManager.StartListening(GameEvents.GlassFilled, TurnOffParticles);
+            EventManager.StartListening(GameEvents.StepFinished, StepFinished);
+            EventManager.StartListening(GameEvents.GlassesPutOnCoasters, delegate { Destroy(gameObject); });
+        }
+        private void OnDisable()
+        {
+            EventManager.StopListening(GameEvents.ColorChanged, ChangeColor);
+            EventManager.StopListening(GameEvents.GlassFilled, TurnOffParticles);
+            EventManager.StopListening(GameEvents.StepFinished, StepFinished);
+            EventManager.StopListening(GameEvents.GlassesPutOnCoasters, delegate { Destroy(gameObject); });
+        }
+
+
+        private void StepFinished(Dictionary<string, object> message)
+        {
+            if (GameManager.Instance.CurrentStep == Steps.ColorMixing)
+            {
+                foreach (var moveTween in GetComponents<Move>())
+                {
+                    if (moveTween.tweenTag == "MoveJugUp")
+                        moveTween.PlayTween();
+                }
+            }
+        }
 
 
         private void Update()
         {
+            if (GameManager.Instance.CurrentStep != Steps.ColorMixing)
+                return;
+
             if (InputManager.Instance.IsTouching && !InputManager.Instance.IsClickingUI && ColorMixingManager.Instance.CanPour)
             {
+                ParticleSystem.Play();
                 _targetRotation = RotationWhenPouring;
                 ParticleSystem.enableEmission = true;
+                ChangeFill(true);
             }
             else
             {
                 _targetRotation = RotationWhenStill;
                 ParticleSystem.enableEmission = false;
+                ChangeFill(false);
             }
 
             RotateToTarget();
@@ -52,6 +87,14 @@ namespace Aezakmi
         private void RotateToTarget()
         {
             transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(_targetRotation), RotationSpeed * Time.deltaTime);
+        }
+
+        private void ChangeFill(bool isPouring)
+        {
+            var targetFill = 0f;
+            targetFill = isPouring ? FillWhenPouring : FillWhenStill;
+
+            JugRenderer.material.SetFloat("_Fill", Mathf.Lerp(JugRenderer.material.GetFloat("_Fill"), targetFill, FillChangeSpeed * Time.deltaTime));
         }
 
         private void ChangeColor(Dictionary<string, object> message)
@@ -74,5 +117,7 @@ namespace Aezakmi
 
             _psMain.startColor = ColorsManager.FixSaturationAndLightness(currentColor, GlassFillData.JugTopSaturation, GlassFillData.TopLightness);
         }
+
+        private void TurnOffParticles(Dictionary<string, object> message) => ParticleSystem.Stop();
     }
 }

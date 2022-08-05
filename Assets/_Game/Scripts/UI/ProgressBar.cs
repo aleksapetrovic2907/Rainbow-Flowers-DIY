@@ -5,22 +5,31 @@ namespace Aezakmi.UI
 {
     public class ProgressBar : MonoBehaviour
     {
+        [SerializeField] private StripperController StripperController;
+
         private Slider _slider;
 
         private void Start() => _slider = GetComponent<Slider>();
 
         private void LateUpdate()
         {
-            // ! TEMP
-            if(GameManager.Instance.CurrentStep == Steps.SetupGlasses)
-                Destroy(gameObject);
-            // ! TEMP
-
-            if (ColorMixingManager.Instance == null)
+            if (GameManager.Instance.CurrentStep == Steps.Stripping)
+            {
+                _slider.value = StripperController.StrippedAmount;
                 return;
+            }
 
-            if (ColorMixingManager.Instance.CanPour)
-                _slider.value = ColorMixingManager.Instance.CurrentFill;
+            if (GameManager.Instance.CurrentStep == Steps.ColorMixing)
+            {
+                if (ColorMixingManager.Instance == null)
+                    return;
+
+                if (ColorMixingManager.Instance.CanPour)
+                    _slider.value = ColorMixingManager.Instance.CurrentFill;
+            }
         }
+
+        private void OnDisable() => _slider.value = 0f;
+
     }
 }

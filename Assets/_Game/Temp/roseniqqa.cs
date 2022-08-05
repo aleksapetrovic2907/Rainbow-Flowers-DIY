@@ -14,8 +14,8 @@ namespace Aezakmi
             _moveTween = GetComponent<Move>();
         }
 
-        private void OnEnable() => EventManager.StartListening(GameEvents.PutRose, PutRose);
-        private void OnDisable() => EventManager.StopListening(GameEvents.PutRose, PutRose);
+        // private void OnEnable() => EventManager.StartListening(GameEvents.PutRose, PutRose);
+        // private void OnDisable() => EventManager.StopListening(GameEvents.PutRose, PutRose);
 
         private void PutRose(Dictionary<string, object> message)
         {

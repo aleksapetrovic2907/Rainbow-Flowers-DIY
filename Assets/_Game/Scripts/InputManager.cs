@@ -21,6 +21,8 @@ namespace Aezakmi
 
         private void Update()
         {
+            SwipeDirection = null;
+
             if (Input.touchCount == 0)
                 return;
 
@@ -36,7 +38,6 @@ namespace Aezakmi
         private void DetectTouchPositions()
         {
             CurrentPosition = Touch.position;
-            SwipeDirection = null;
 
             if (Touch.phase == TouchPhase.Began)
                 StartPosition = Touch.position;

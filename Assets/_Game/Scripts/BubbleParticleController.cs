@@ -18,13 +18,18 @@ namespace Aezakmi
 
         private void ResetHeight(Dictionary<string, object> message)
         {
+            _particleSystem.Stop();
             transform.localPosition = new Vector3(transform.localPosition.x, HeightRange.x, transform.localPosition.z);
         }
 
         private void Update()
         {
+            if (GameManager.Instance.CurrentStep != Steps.ColorMixing)
+                return;
+
             if (InputManager.Instance.IsTouching && !InputManager.Instance.IsClickingUI && ColorMixingManager.Instance.CanPour)
             {
+                _particleSystem.Play();
                 _particleSystem.enableEmission = true;
                 MoveUp();
             }
@@ -41,11 +46,6 @@ namespace Aezakmi
                 targetHeight + INFINITESIMAL,
                 transform.localPosition.z
             );
-        }
-
-        void OnParticleCollision(GameObject other)
-        {
-            Debug.Log("test");
         }
     }
 }

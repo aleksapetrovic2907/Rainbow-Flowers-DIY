@@ -5,10 +5,12 @@ using UnityEngine;
 public enum GameEvents
 {
     StepFinished,
+    FinishedStripping,
     ColorChanged,
     GlassFilled,
-
-    PutRose, // ! TEMP
+    GlassesPutOnCoasters,
+    StemCut,
+    FinishedStemCutting,
 }
 
 namespace Aezakmi
