@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
+using NaughtyAttributes;
 
 namespace Aezakmi.Tweens
 {
@@ -30,6 +31,7 @@ namespace Aezakmi.Tweens
             if (_playOnAwake) PlayTween();
         }
 
+        [Button]
         public virtual void PlayTween()
         {
             _eventsOnPlayTween.Invoke();

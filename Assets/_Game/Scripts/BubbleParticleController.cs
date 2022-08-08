@@ -18,7 +18,7 @@ namespace Aezakmi
 
         private void ResetHeight(Dictionary<string, object> message)
         {
-            _particleSystem.Stop();
+            _particleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);;
             transform.localPosition = new Vector3(transform.localPosition.x, HeightRange.x, transform.localPosition.z);
         }
 
