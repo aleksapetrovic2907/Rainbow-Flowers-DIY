@@ -11,6 +11,7 @@ namespace Aezakmi.Colors
         private void Start()
         {
             Invoke("ColorPetals", _startDelay);
+            GameManager.Instance.ShowEndScreen();
         }
 
         private void ColorPetals()

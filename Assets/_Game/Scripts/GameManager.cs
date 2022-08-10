@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Aezakmi.Colors;
+using Timers;
+using UnityEngine.SceneManagement;
+
 
 public enum Steps
 {
@@ -27,6 +30,9 @@ namespace Aezakmi
         [SerializeField] private StemCuttingManager StemCuttingManager;
         [SerializeField] private PetalColorManager PetalColorManager;
 
+        [SerializeField] private GameObject EndScreenCanvas;
+        [SerializeField] private float ShowEndScreenDelay;
+
         private void OnEnable()
         {
             EventManager.StartListening(GameEvents.GlassFilled, AddNewColor);
@@ -47,6 +53,7 @@ namespace Aezakmi
             CurrentStep++;
             EventManager.TriggerEvent(GameEvents.StepFinished, new Dictionary<string, object> { });
 
+            
             if (CurrentStep == Steps.Stripping)
             {
                 StrippingManager.gameObject.SetActive(true);
@@ -65,11 +72,20 @@ namespace Aezakmi
                 return;
             }
 
-            if(CurrentStep == Steps.PetalColoring)
+            if (CurrentStep == Steps.PetalColoring)
             {
                 PetalColorManager.gameObject.SetActive(true);
                 return;
             }
+
+        }
+
+        public void ShowEndScreen()
+        {
+            TimersManager.SetTimer(this, ShowEndScreenDelay, 1, delegate
+            {
+                EndScreenCanvas.SetActive(true);
+            });
         }
     }
 }

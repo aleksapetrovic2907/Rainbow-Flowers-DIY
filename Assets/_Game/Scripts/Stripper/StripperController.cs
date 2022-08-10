@@ -22,6 +22,7 @@ namespace Aezakmi
             if (FinishedStripping)
                 return;
 
+
             _moveDelta = Mathf.Abs(InputManager.Instance.Touch.deltaPosition.y / Screen.currentResolution.height);
 
             StrippedAmount += _stripSpeed * Time.deltaTime * _moveDelta;
